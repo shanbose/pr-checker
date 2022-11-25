@@ -27,9 +27,6 @@ import axios from 'axios'
  * Main function
  */
 async function run(): Promise<void> {
-  const jenkinsURL =
-    'https://oacis-jenkins-git-router.azurewebsites.net/buildresult'
-
   try {
     const checkerArguments = inputHelper.getInputs()
     const commits = JSON.parse(checkerArguments.commitsString)
@@ -51,12 +48,13 @@ async function run(): Promise<void> {
     }
 
     const repo: string = checkerArguments.repo.split('/')[1]
+    const buildStatusURL = `${checkerArguments.buildStatusURL}/buildresult`
 
     core.info(`Repo: ${checkerArguments.repo}`)
     core.info(`Head: ${checkerArguments.head}`)
 
     const rsp = await getBuildStatus(
-      jenkinsURL,
+      buildStatusURL,
       repo,
       checkerArguments.head,
       checkerArguments.code

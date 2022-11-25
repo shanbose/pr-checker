@@ -1517,7 +1517,6 @@ const axios_1 = __importDefault(__webpack_require__(53));
  */
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const jenkinsURL = 'https://oacis-jenkins-git-router.azurewebsites.net/buildresult';
         try {
             const checkerArguments = inputHelper.getInputs();
             const commits = JSON.parse(checkerArguments.commitsString);
@@ -1530,9 +1529,10 @@ function run() {
                 }
             }
             const repo = checkerArguments.repo.split('/')[1];
+            const buildStatusURL = `${checkerArguments.buildStatusURL}/buildresult`;
             core.info(`Repo: ${checkerArguments.repo}`);
             core.info(`Head: ${checkerArguments.head}`);
-            const rsp = yield getBuildStatus(jenkinsURL, repo, checkerArguments.head, checkerArguments.code);
+            const rsp = yield getBuildStatus(buildStatusURL, repo, checkerArguments.head, checkerArguments.code);
             if (rsp.isError) {
                 failed.push({ label: 'ERROR:', message: rsp.message });
             }
@@ -5628,6 +5628,7 @@ function getInputs() {
     result.commitsString = core.getInput('commits');
     result.preErrorMsg = core.getInput('pre_error');
     result.postErrorMsg = core.getInput('post_error');
+    result.buildStatusURL = core.getInput('build_status_url');
     return result;
 }
 exports.getInputs = getInputs;
@@ -5643,6 +5644,9 @@ function checkArgs(args) {
     }
     if (args.code.length === 0) {
         throw new Error(`CODE not defined.`);
+    }
+    if (args.buildStatusURL.length === 0) {
+        throw new Error(`BUID STATUS URL not defined.`);
     }
     const regex = new RegExp('[^gimsuy]', 'g');
     let invalidChars;
