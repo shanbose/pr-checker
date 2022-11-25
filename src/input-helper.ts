@@ -41,6 +41,7 @@ export function getInputs(): ICheckerArguments {
   result.commitsString = core.getInput('commits')
   result.preErrorMsg = core.getInput('pre_error')
   result.postErrorMsg = core.getInput('post_error')
+  result.buildStatusURL = core.getInput('build_status_url')
 
   return result
 }
@@ -60,6 +61,10 @@ export function checkArgs(args: ICheckerArguments): void {
 
   if (args.code.length === 0) {
     throw new Error(`CODE not defined.`)
+  }
+
+  if (args.buildStatusURL.length === 0) {
+    throw new Error(`BUID STATUS URL not defined.`)
   }
 
   const regex = new RegExp('[^gimsuy]', 'g')

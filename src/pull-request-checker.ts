@@ -36,6 +36,7 @@ export interface ICheckerArguments {
   commitsString: string
   preErrorMsg: string
   postErrorMsg: string
+  buildStatusURL: string
 }
 
 /**
