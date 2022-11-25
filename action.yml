@@ -1,0 +1,36 @@
+name: "Pull request checker"
+description: "Check the commit message in pr against a regex pattern"
+author: "Tim"
+inputs:
+  commits:
+    description: "commits in json format"
+    required: true
+  pattern:
+    description: "A regex pattern to check if a commit message is valid."
+    required: true
+  flags:
+    description: "Expression flags change how the expression is interpreted."
+    required: false
+    default: ""
+  error:
+    description: "A error message which will be returned in case of an error."
+    required: true
+  pre_error:
+    description: "A error message which will be showed in the begin of errors."
+    required: false
+    default: ""
+  post_error:
+    description: "A error message which will be showed in the end of errors."
+    required: false
+    default: ""
+  one_pass_all_pass:
+    description: 'If "true", as long as one commit in the pull-request passes the check, all pass.'
+    required: false
+    default: "false"
+
+runs:
+  using: node16
+  main: dist/index.js
+branding:
+  icon: "check"
+  color: "blue"
