@@ -84,7 +84,7 @@ export function isSquashingNeeded(branch: string, commits: any): boolean {
 
   if (branch !== 'develop') {
     for (const {commit, sha} of commits) {
-      const storyId = commit.substring(0, commit.indexOf('|'))
+      const storyId = commit.message.substring(0, commit.message.indexOf('|'))
 
       if (commitMap.get(storyId) === undefined) {
         commitMap.set(storyId, storyId)
