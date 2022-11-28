@@ -1528,6 +1528,12 @@ function run() {
                     failed.push({ label: 'ERROR:', message: `${sha} - ${errMsg}` });
                 }
             }
+            if (pullRequestChecker.isSquashingNeeded(checkerArguments.head, commits)) {
+                failed.push({
+                    label: 'ERROR:',
+                    message: 'Squash commits with same story id.'
+                });
+            }
             const repo = checkerArguments.repo.split('/')[1];
             const buildStatusURL = `${checkerArguments.buildStatusURL}/buildresult`;
             core.info(`Repo: ${checkerArguments.repo}`);
@@ -5623,7 +5629,7 @@ function getInputs() {
     result.pattern = '^ESP-[0-9]+\\s\\|\\s[a-zA-Z]+|^Merge\\spull';
     result.flags = core.getInput('flags');
     result.error =
-        'Invalid commit message format. Use ESP-NNN<space>|<space>Story summary';
+        'Invalid commit message format. Allowed formats: ESP-NNN<space>|<space>Story summary / Merge<space>pull';
     result.onePassAllPass = core.getInput('one_pass_all_pass');
     result.commitsString = core.getInput('commits');
     result.preErrorMsg = core.getInput('pre_error');
@@ -5913,7 +5919,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkMessage = exports.checkPullRequest = void 0;
+exports.isSquashingNeeded = exports.checkMessage = exports.checkPullRequest = void 0;
 /**
  * Imports
  */
@@ -5946,6 +5952,25 @@ function checkMessage(message, pattern, flags) {
     return regex.test(message);
 }
 exports.checkMessage = checkMessage;
+/**
+ * Checks if squash needed.
+ */
+function isSquashingNeeded(branch, commits) {
+    const commitMap = new Map();
+    if (branch !== 'develop') {
+        for (const { commit, sha } of commits) {
+            const storyId = commit.substring(0, commit.indexOf('|'));
+            if (commitMap.get(storyId) === undefined) {
+                commitMap.set(storyId, storyId);
+            }
+            else {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+exports.isSquashingNeeded = isSquashingNeeded;
 
 
 /***/ }),

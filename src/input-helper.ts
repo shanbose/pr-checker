@@ -36,7 +36,7 @@ export function getInputs(): ICheckerArguments {
   result.pattern = '^ESP-[0-9]+\\s\\|\\s[a-zA-Z]+|^Merge\\spull'
   result.flags = core.getInput('flags')
   result.error =
-    'Invalid commit message format. Use ESP-NNN<space>|<space>Story summary'
+    'Invalid commit message format. Allowed formats: ESP-NNN<space>|<space>Story summary / Merge<space>pull'
   result.onePassAllPass = core.getInput('one_pass_all_pass')
   result.commitsString = core.getInput('commits')
   result.preErrorMsg = core.getInput('pre_error')

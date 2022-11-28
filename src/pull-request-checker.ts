@@ -75,3 +75,24 @@ export function checkMessage(
 
   return regex.test(message)
 }
+
+/**
+ * Checks if squash needed.
+ */
+export function isSquashingNeeded(branch: string, commits: any): boolean {
+  const commitMap = new Map()
+
+  if (branch !== 'develop') {
+    for (const {commit, sha} of commits) {
+      const storyId = commit.substring(0, commit.indexOf('|'))
+
+      if (commitMap.get(storyId) === undefined) {
+        commitMap.set(storyId, storyId)
+      } else {
+        return true
+      }
+    }
+  }
+
+  return false
+}
