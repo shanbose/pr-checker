@@ -47,6 +47,13 @@ async function run(): Promise<void> {
       }
     }
 
+    if (pullRequestChecker.isSquashingNeeded(checkerArguments.head, commits)) {
+      failed.push({
+        label: 'ERROR:',
+        message: 'Squash commits with same story id.'
+      })
+    }
+
     const repo: string = checkerArguments.repo.split('/')[1]
     const buildStatusURL = `${checkerArguments.buildStatusURL}/buildresult`
 
