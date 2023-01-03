@@ -1521,7 +1521,9 @@ function run() {
             const checkerArguments = inputHelper.getInputs();
             const commits = JSON.parse(checkerArguments.commitsString);
             const failed = [];
+            let lastCommit = '';
             for (const { commit, sha } of commits) {
+                lastCommit = sha;
                 inputHelper.checkArgs(checkerArguments);
                 const errMsg = pullRequestChecker.checkPullRequest(checkerArguments, sha, commit.message);
                 if (errMsg) {
@@ -1538,7 +1540,8 @@ function run() {
             const buildStatusURL = `${checkerArguments.buildStatusURL}/buildresult`;
             core.info(`Repo: ${checkerArguments.repo}`);
             core.info(`Head: ${checkerArguments.head}`);
-            const rsp = yield getBuildStatus(buildStatusURL, repo, checkerArguments.head, checkerArguments.code);
+            core.info(`Last Commit: ${lastCommit}`);
+            const rsp = yield getBuildStatus(buildStatusURL, repo, checkerArguments.head, lastCommit, checkerArguments.code);
             if (rsp.isError) {
                 failed.push({ label: 'ERROR:', message: rsp.message });
             }
@@ -1566,7 +1569,7 @@ function run() {
         }
     });
 }
-function getBuildStatus(endpoint, repoName, headBranch, fcode) {
+function getBuildStatus(endpoint, repoName, headBranch, lastCommit, fcode) {
     return __awaiter(this, void 0, void 0, function* () {
         let ccode = '';
         for (let i = 0; i < fcode.length; i++) {
@@ -1577,6 +1580,7 @@ function getBuildStatus(endpoint, repoName, headBranch, fcode) {
             params: {
                 repo: repoName,
                 branch: headBranch,
+                last_commit: lastCommit,
                 code: ccode
             }
         })
