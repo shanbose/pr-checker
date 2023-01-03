@@ -33,7 +33,11 @@ async function run(): Promise<void> {
 
     const failed = []
 
+    let lastCommit = ''
+
     for (const {commit, sha} of commits) {
+      lastCommit = sha
+
       inputHelper.checkArgs(checkerArguments)
 
       const errMsg = pullRequestChecker.checkPullRequest(
@@ -59,11 +63,13 @@ async function run(): Promise<void> {
 
     core.info(`Repo: ${checkerArguments.repo}`)
     core.info(`Head: ${checkerArguments.head}`)
+    core.info(`Last Commit: ${lastCommit}`)
 
     const rsp = await getBuildStatus(
       buildStatusURL,
       repo,
       checkerArguments.head,
+      lastCommit,
       checkerArguments.code
     )
 
@@ -108,6 +114,7 @@ async function getBuildStatus(
   endpoint: string,
   repoName: string,
   headBranch: string,
+  lastCommit: string,
   fcode: string
 ): Promise<any> {
   let ccode = ''
@@ -121,6 +128,7 @@ async function getBuildStatus(
       params: {
         repo: repoName,
         branch: headBranch,
+        last_commit: lastCommit,
         code: ccode
       }
     })
