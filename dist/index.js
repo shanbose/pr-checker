@@ -1533,7 +1533,7 @@ function run() {
             if (pullRequestChecker.isSquashingNeeded(checkerArguments.head, commits)) {
                 failed.push({
                     label: 'ERROR:',
-                    message: 'Squash commits with same story id.'
+                    message: 'Squash commits having same story id.'
                 });
             }
             const repo = checkerArguments.repo.split('/')[1];
