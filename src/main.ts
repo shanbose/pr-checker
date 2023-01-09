@@ -54,7 +54,7 @@ async function run(): Promise<void> {
     if (pullRequestChecker.isSquashingNeeded(checkerArguments.head, commits)) {
       failed.push({
         label: 'ERROR:',
-        message: 'Squash commits with same story id.'
+        message: 'Squash commits having same story id.'
       })
     }
 
