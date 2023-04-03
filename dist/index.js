@@ -1550,7 +1550,7 @@ function run() {
                 if (rsp.data.lastBuildSuccessStatus === false) {
                     failed.push({
                         label: 'ERROR:',
-                        message: 'The head branch should have a recent successful deployment. Please tirgger a deployment in Jenkins and then re-run this job.'
+                        message: 'The head branch should have a recent successful deployment and linked test automation execution. Please tirgger the Jenkins builds and then re-run this job.'
                     });
                 }
             }
